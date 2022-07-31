@@ -1,12 +1,13 @@
 #![recursion_limit = "1024"]
 #![cfg_attr(
   feature = "nightly",
-  feature(const_fn_trait_bound, unboxed_closures, abi_thiscall)
+  feature(unboxed_closures, abi_thiscall)
 )]
 #![cfg_attr(
   all(feature = "nightly", test),
-  feature(naked_functions, core_intrinsics, asm)
+  feature(naked_functions, core_intrinsics)
 )]
+#![allow(named_asm_labels)]
 
 //! A cross-platform detour library written in Rust.
 //!
@@ -116,6 +117,7 @@ mod tests {
   use crate::Result;
   use matches::assert_matches;
 
+  #[allow(unused_unsafe)]
   #[test]
   fn detours_share_target() -> Result<()> {
     #[inline(never)]
@@ -143,7 +145,7 @@ mod tests {
     unsafe { hook2.enable()? };
 
     // This will call the previous hook's detour
-    assert_eq!(hook2.call(5, 5), 0);
+    assert_eq!(unsafe{ hook2.call(5, 5) }, 0);
     assert_eq!(add(10, 5), 2);
     Ok(())
   }

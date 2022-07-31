@@ -14,7 +14,8 @@ mod tests {
   use crate::error::{Error, Result};
   use crate::RawDetour;
   use matches::assert_matches;
-  use std::mem;
+  use std::arch::asm;
+use std::mem;
 
   /// Default test case function definition.
   type CRet = unsafe extern "C" fn() -> i32;
